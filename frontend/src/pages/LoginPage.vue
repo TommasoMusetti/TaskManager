@@ -64,7 +64,7 @@ const loginUser = async () => {
         message: response.data.message,
         color: 'green',
         icon: 'check',
-        position: 'bottom',
+        position: 'top',
       })
       localStorage.setItem('authToken', response.data.token)
       await router.push('/')
