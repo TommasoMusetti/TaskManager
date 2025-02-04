@@ -67,6 +67,14 @@
           class="q-pa-md"
           style="width: 150px; height: 60px"
         />
+        <q-btn
+          class="q-pa-md"
+          label="Home"
+          color="primary"
+          to="/"
+          style="width: 150px; height: 60px"
+        >
+        </q-btn>
       </q-card-section>
     </q-card>
   </q-page>
@@ -105,10 +113,7 @@ const addTask = async () => {
   loading.value = true
 
   try {
-    const response = await axios.post(
-      'http://localhost:8000/api/dashboard/tasks/addTask',
-      nuovaTask.value,
-    )
+    const response = await axios.post('http://localhost:8000/api/tasks/addTask', nuovaTask.value)
     nuovaTask.value = { descrizione: '', user_email: user }
     $q.notify({ message: response.data.message })
     await fetchTasks()
@@ -122,7 +127,7 @@ const addTask = async () => {
 
 const fetchTasks = async () => {
   try {
-    const response = await axios.post('http://localhost:8000/api/dashboard/tasks/viewTask', {
+    const response = await axios.post('http://localhost:8000/api/tasks/viewTask', {
       email: user,
     })
     listaTask.value = response.data
@@ -136,7 +141,7 @@ onMounted(fetchTasks)
 const changeTask = async () => {
   try {
     if (selectedTasks.value.length < 2) {
-      const response = await axios.post('http://localhost:8000/api/dashboard/tasks/changeTask', {
+      const response = await axios.post('http://localhost:8000/api/tasks/changeTask', {
         task: modificaTask.value,
         id: selectedTasks.value[0],
       })

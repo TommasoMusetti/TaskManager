@@ -2,7 +2,7 @@
   <q-page class="flex flex-center" style="gap: 30px">
     <q-btn v-if="isLogged" class="q-pa-md" label="login" to="/login"> </q-btn>
     <q-btn v-else class="q-pa-md" label="Logout" @click="Logout"> </q-btn>
-    <q-btn class="q-pa-md" label="dashboard" to="/dashboard"></q-btn>
+    <q-btn class="q-pa-md" label="dashboard" to="/tasks"></q-btn>
   </q-page>
 </template>
 

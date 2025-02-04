@@ -20,16 +20,10 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/dashboard',
+    path: '/tasks',
     component: () => import('layouts/MainLayout.vue'),
     meta: { requiresAuth: true },
-    children: [
-      {
-        path: '',
-        component: () => import('pages/DashboardPage.vue'),
-      },
-      { path: 'tasks', component: () => import('pages/TasksPage.vue') },
-    ],
+    children: [{ path: '', component: () => import('pages/TasksPage.vue') }],
   },
 
   // Always leave this as last one,
