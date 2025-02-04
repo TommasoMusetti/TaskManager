@@ -32,8 +32,10 @@
           />
         </q-form>
       </q-card-section>
-      <q-btn class="q-pa-md" label="Home" to="/"> </q-btn>
-      <q-btn class="q-pa-md" label="Registrazione" to="/register"> </q-btn>
+      <q-card-section class="flex" style="gap: 20px">
+        <q-btn class="q-pa-md" label="Home" to="/"> </q-btn>
+        <q-btn class="q-pa-md" label="Registrazione" to="/register"> </q-btn>
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
@@ -43,6 +45,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
+import { useTokenStore } from 'src/stores/tokenStore'
 
 const $q = useQuasar()
 const router = useRouter()
@@ -51,6 +54,12 @@ const form = ref({
   email: '',
   password: '',
 })
+
+const tokenStore = useTokenStore()
+
+function setToken(newToken: string) {
+  tokenStore.setToken(newToken)
+}
 
 const loading = ref(false)
 
@@ -66,7 +75,7 @@ const loginUser = async () => {
         icon: 'check',
         position: 'top',
       })
-      localStorage.setItem('authToken', response.data.token)
+      setToken(response.data.token)
       await router.push('/')
     } else {
       $q.notify({ message: 'Credenziali errate!' })

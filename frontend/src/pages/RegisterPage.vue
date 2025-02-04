@@ -57,9 +57,16 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
+import { useTokenStore } from 'src/stores/tokenStore'
 
 const $q = useQuasar()
 const router = useRouter()
+
+const tokenStore = useTokenStore()
+
+function setToken(newToken: string) {
+  tokenStore.setToken(newToken)
+}
 
 const form = ref({
   name: '',
@@ -77,7 +84,7 @@ const registerUser = async () => {
     const response = await axios.post('http://localhost:8000/api/register', form.value)
     $q.notify({ message: response.data.message, color: 'green', icon: 'check', position: 'top' })
     form.value = { name: '', email: '', password: '', password_confirmation: '' }
-    localStorage.setItem('authToken', response.data.token)
+    setToken(response.data.token)
     await router.push('/')
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
