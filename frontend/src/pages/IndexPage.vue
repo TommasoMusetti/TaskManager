@@ -7,16 +7,16 @@
 </template>
 
 <script setup lang="ts">
-import { useTokenStore } from 'src/stores/tokenStore'
+import { useSessionStore } from 'src/stores/sessionStore'
 import { ref } from 'vue'
 
-const tokenStore = useTokenStore()
-const token = tokenStore.token
+const sessionStore = useSessionStore()
+const token = sessionStore.token
 
 const isLogged = ref(token === '')
 
 function Logout() {
-  tokenStore.clearToken()
+  sessionStore.clearSession()
   isLogged.value = true
 }
 </script>

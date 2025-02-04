@@ -6,7 +6,7 @@ import {
   createWebHistory,
 } from 'vue-router'
 import routes from './routes'
-import { useTokenStore } from 'src/stores/tokenStore'
+import { useSessionStore } from 'src/stores/sessionStore'
 
 /*
  * If not building with SSR mode, you can
@@ -35,7 +35,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    const tokenStore = useTokenStore() // Usa lo store per ottenere il token
+    const tokenStore = useSessionStore() // Usa lo store per ottenere il token
     const token = tokenStore.token // Ottieni il token dal store
 
     // Se la route richiede autenticazione e non c'è il token, reindirizza al login

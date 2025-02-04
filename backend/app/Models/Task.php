@@ -10,11 +10,12 @@ class Task extends Model
     protected $fillable = [
         'descrizione',
         'checked',
-        'user_id'
+        'email'
     ];
 
     protected $attributes = [
         'checked' => 0, 
+        'email' => '',
     ];
 
 }

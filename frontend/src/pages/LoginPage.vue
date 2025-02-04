@@ -45,7 +45,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { useTokenStore } from 'src/stores/tokenStore'
+import { useSessionStore } from 'src/stores/sessionStore'
 
 const $q = useQuasar()
 const router = useRouter()
@@ -55,10 +55,10 @@ const form = ref({
   password: '',
 })
 
-const tokenStore = useTokenStore()
+const sessionStore = useSessionStore()
 
-function setToken(newToken: string) {
-  tokenStore.setToken(newToken)
+function setSession(newToken: string, newUser: string) {
+  sessionStore.setSession(newToken, newUser)
 }
 
 const loading = ref(false)
@@ -75,7 +75,7 @@ const loginUser = async () => {
         icon: 'check',
         position: 'top',
       })
-      setToken(response.data.token)
+      setSession(response.data.token, response.data.email)
       await router.push('/')
     } else {
       $q.notify({ message: 'Credenziali errate!' })

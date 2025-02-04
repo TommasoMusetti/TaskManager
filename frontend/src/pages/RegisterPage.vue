@@ -57,17 +57,12 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { useTokenStore } from 'src/stores/tokenStore'
+import { useSessionStore } from 'src/stores/sessionStore'
 
 const $q = useQuasar()
 const router = useRouter()
-
-const tokenStore = useTokenStore()
-
-function setToken(newToken: string) {
-  tokenStore.setToken(newToken)
-}
-
+const sessionStore = useSessionStore()
+const loading = ref(false)
 const form = ref({
   name: '',
   email: '',
@@ -75,7 +70,9 @@ const form = ref({
   password_confirmation: '',
 })
 
-const loading = ref(false)
+function setSession(newToken: string, newUser: string) {
+  sessionStore.setSession(newToken, newUser)
+}
 
 const registerUser = async () => {
   loading.value = true
@@ -84,7 +81,7 @@ const registerUser = async () => {
     const response = await axios.post('http://localhost:8000/api/register', form.value)
     $q.notify({ message: response.data.message, color: 'green', icon: 'check', position: 'top' })
     form.value = { name: '', email: '', password: '', password_confirmation: '' }
-    setToken(response.data.token)
+    setSession(response.data.token, response.data.email)
     await router.push('/')
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
