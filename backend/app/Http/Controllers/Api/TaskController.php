@@ -39,20 +39,25 @@ class TaskController extends Controller
         $task->descrizione = $new_task;
         $task->save();
 
-        return response()->json(['message' => 'Task aggiornata!'], 201);
+        return response()->json(['message' => 'Task aggiornata!'], 200);
     }
 
     public function completeTask(Request $request)
     {
-        Task::whereIn('id', $request->ids)
-        ->update(['checked' => 1]);
+        $records = Task::whereIn('id', $request->ids)->get();
 
-        if(count($request->ids) > 1){
-            return response()->json([ 'message' => 'Tasks completate con successo!'], 201);
+        foreach ($records as $record) {
+            $record->update([
+                'checked' => $record->checked == 0 ? 1 : 0
+            ]);
         }
-        else{
-            return response()->json([ 'message' => 'Task completata con successo!'], 201);
-        }
+
+        $message = count($request->ids) > 1
+            ? 'Stato delle tasks aggiornato con successo!'
+            : 'Stato della task aggiornato con successo!';
+
+        return response()->json(['message' => $message], 200);
+        
         
     }
 
@@ -60,12 +65,11 @@ class TaskController extends Controller
     {
         Task::whereIn('id', $request->ids)->delete();
 
-        if(count($request->ids) > 1){
-            return response()->json([ 'message' => 'Tasks eliminate con successo!'], 201);
-        }
-        else{
-            return response()->json([ 'message' => 'Task eliminata con successo!'], 201);
-        }
+        $message = count($request->ids) > 1
+            ? 'Tasks eliminate con successo!'
+            : 'Task eliminata cocon successo!';
+
+        return response()->json(['message' => $message], 200);
     }
 
 }
