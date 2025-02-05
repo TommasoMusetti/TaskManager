@@ -25,7 +25,7 @@
           <q-btn
             label="Nuova Task"
             type="submit"
-            color="secondary"
+            color="primary"
             class="q-pa-none"
             style="width: 150px; height: 60px; transition: all 0.3s ease"
           />
@@ -44,7 +44,7 @@
           <q-btn
             label="Modifica Task"
             type="submit"
-            color="secondary"
+            color="primary"
             class="q-pa-none"
             style="width: 150px; height: 60px; transition: all 0.3s ease"
           />
@@ -73,16 +73,15 @@
           style="width: 150px; height: 60px; transition: all 0.3s ease"
           @click="removeTask"
         />
-        <q-btn
-          class="q-pa-md"
-          label="Home"
-          color="primary"
-          to="/"
-          style="width: 150px; height: 60px"
-        >
-        </q-btn>
       </q-card-section>
     </q-card>
+    <q-btn
+      class="q-pa-md"
+      label="Logout"
+      color="negative"
+      style="width: 150px; height: 60px; position: absolute; top: 40px; right: 40px"
+      @click="confirmLogout"
+    />
   </q-page>
 </template>
 
@@ -90,10 +89,11 @@
 import { useQuasar } from 'quasar'
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 const loading = ref(false)
 const $q = useQuasar()
-
+const router = useRouter()
 const user = localStorage.getItem('session') ?? '{}'
 const parsedUser = JSON.parse(user)
 const selectedTasks = ref([])
@@ -121,6 +121,7 @@ const fetchTasks = async () => {
       email: parsedUser?.user,
     })
     listaTask.value = response.data
+    selectedTasks.value = []
   } catch (error) {
     console.log(error)
   }
@@ -188,6 +189,22 @@ const removeTask = async () => {
     console.log(error)
     $q.notify({ message: 'Errore nella eliminazione!' })
   }
+}
+
+function confirmLogout() {
+  $q.dialog({
+    title: 'Confirm Logout',
+    message: 'Confermi di voler uscire?',
+    cancel: true,
+    persistent: true,
+  })
+    .onOk(() => {
+      localStorage.removeItem('session')
+      void router.push('/')
+    })
+    .onCancel(() => {
+      console.log("L'utente ha deciso di non uscire")
+    })
 }
 </script>
 

@@ -19,7 +19,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         if($user && Hash::check($request->password, $user->password)){
             $token = $user->createToken('Token')->plainTextToken;
-            return response()->json(['message' => 'Login avvenuto con successo!','token' => $token, 'email' => $user->email, 'username' => $user->name], 201);
+            return response()->json(['message' => 'Login avvenuto con successo!','token' => $token, 'email' => $user->email, 'username' => $user->name], 200);
         }
         else{
             return response()->json(['message' => 'Credenziali errate!'], 401);

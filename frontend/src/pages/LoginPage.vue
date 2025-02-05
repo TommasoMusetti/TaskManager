@@ -56,6 +56,9 @@ import { useRouter } from 'vue-router'
 const $q = useQuasar()
 const router = useRouter()
 
+const loading = ref(false)
+const isPwd = ref(true)
+
 const form = ref({
   email: '',
   password: '',
@@ -65,9 +68,6 @@ function setSession(newToken: string, newUser: string, newUsername: string) {
   const session = { user: newUser, token: newToken, username: newUsername }
   localStorage.setItem('session', JSON.stringify(session))
 }
-
-const loading = ref(false)
-const isPwd = ref(true)
 
 const loginUser = async () => {
   loading.value = true
@@ -82,7 +82,7 @@ const loginUser = async () => {
         position: 'top',
       })
       setSession(response.data.token, response.data.email, response.data.username)
-      await router.push('/')
+      await router.push('/tasks')
     } else {
       $q.notify({ message: 'Credenziali errate!' })
     }

@@ -62,7 +62,7 @@
         </q-form>
       </q-card-section>
       <q-card-section class="flex" style="gap: 20px">
-        <q-btn class="q-pa-md" label="Login" to="/login"> </q-btn>
+        <q-btn class="q-pa-md" label="Login" to="/"> </q-btn>
       </q-card-section>
     </q-card>
   </q-page>
@@ -99,7 +99,7 @@ const registerUser = async () => {
     $q.notify({ message: response.data.message, color: 'green', icon: 'check', position: 'top' })
     form.value = { name: '', email: '', password: '', password_confirmation: '' }
     setSession(response.data.token, response.data.email, response.data.username)
-    await router.push('/')
+    await router.push('/tasks')
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       // Verifica se l'errore è un'istanza di AxiosError

@@ -38,13 +38,13 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     const parsedSession = session ? JSON.parse(session) : null
 
     if (!parsedSession?.token) {
-      // Se la rotta richiede autenticazione o è la home, reindirizza a /login
-      if (to.meta.requiresAuth || to.path === '/') {
-        return next('/login')
+      // Se la rotta richiede autenticazione, reindirizza a /login
+      if (to.meta.requiresAuth) {
+        return next('/')
       }
     }
 
-    next() // Se tutto è a posto, procedi con la navigazione
+    next()
   })
 
   return Router
