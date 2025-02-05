@@ -74,7 +74,7 @@ const loginUser = async () => {
 
   try {
     const response = await axios.post('http://localhost:8000/api/login', form.value)
-    if (response.status === 201) {
+    if (response.status === 200) {
       $q.notify({
         message: response.data.message,
         color: 'green',

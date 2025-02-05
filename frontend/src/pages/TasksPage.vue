@@ -166,6 +166,10 @@ const changeTask = async () => {
 }
 
 const completeTask = async () => {
+  if (selectedTasks.value.length < 1) {
+    $q.notify({ message: 'Seleziona almeno una task!' })
+    return
+  }
   try {
     const response = await axios.put('http://localhost:8000/api/tasks/completeTask', {
       ids: selectedTasks.value,
@@ -179,6 +183,10 @@ const completeTask = async () => {
 }
 
 const removeTask = async () => {
+  if (selectedTasks.value.length < 1) {
+    $q.notify({ message: 'Seleziona almeno una task!' })
+    return
+  }
   try {
     const response = await axios.delete('http://localhost:8000/api/tasks/removeTask', {
       params: { ids: selectedTasks.value },
