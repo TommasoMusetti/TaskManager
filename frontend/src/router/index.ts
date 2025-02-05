@@ -6,7 +6,6 @@ import {
   createWebHistory,
 } from 'vue-router'
 import routes from './routes'
-import { useSessionStore } from 'src/stores/sessionStore'
 
 /*
  * If not building with SSR mode, you can
@@ -35,15 +34,17 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    const tokenStore = useSessionStore() // Usa lo store per ottenere il token
-    const token = tokenStore.token // Ottieni il token dal store
+    const session = localStorage.getItem('session')
+    const parsedSession = session ? JSON.parse(session) : null
 
-    // Se la route richiede autenticazione e non c'è il token, reindirizza al login
-    if (to.meta.requiresAuth && token === '') {
-      next({ path: '/login' }) // Assicurati che 'login' sia il nome della tua route di login
-    } else {
-      next() // Permetti l'accesso alla route
+    if (!parsedSession?.token) {
+      // Se la rotta richiede autenticazione o è la home, reindirizza a /login
+      if (to.meta.requiresAuth || to.path === '/') {
+        return next('/login')
+      }
     }
+
+    next() // Se tutto è a posto, procedi con la navigazione
   })
 
   return Router

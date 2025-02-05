@@ -42,12 +42,30 @@ class TaskController extends Controller
         return response()->json(['message' => 'Task aggiornata!'], 201);
     }
 
-    public function completeTask()
+    public function completeTask(Request $request)
     {
+        Task::whereIn('id', $request->ids)
+        ->update(['checked' => 1]);
+
+        if(count($request->ids) > 1){
+            return response()->json([ 'message' => 'Tasks completate con successo!'], 201);
+        }
+        else{
+            return response()->json([ 'message' => 'Task completata con successo!'], 201);
+        }
+        
     }
 
-    public function removeTask()
+    public function removeTask(Request $request)
     {
+        Task::whereIn('id', $request->ids)->delete();
+
+        if(count($request->ids) > 1){
+            return response()->json([ 'message' => 'Tasks eliminate con successo!'], 201);
+        }
+        else{
+            return response()->json([ 'message' => 'Task eliminata con successo!'], 201);
+        }
     }
 
 }

@@ -8,8 +8,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/tasks/addTask', [TaskController::class, 'addTask']);
 Route::post('/tasks/viewTask', [TaskController::class, 'viewTask']);
-Route::post('/tasks/changeTask', [TaskController::class, 'changeTask']);
-
-Route::post('/tasks/completeTask', [TaskController::class, 'completeTask']);
-Route::post('/tasks/removeTask', [TaskController::class, 'removeTask']);
+Route::put('/tasks/changeTask', [TaskController::class, 'changeTask']);
+Route::put('/tasks/completeTask', [TaskController::class, 'completeTask']);
+Route::delete('/tasks/removeTask', [TaskController::class, 'removeTask']);
 

@@ -25,18 +25,32 @@
           <q-input
             filled
             v-model="form.password"
-            type="password"
+            :type="hidden_password ? 'password' : 'text'"
             label="Password"
-            :rules="[(val) => (val && val.length >= 6) || 'Minimo 6 caratteri']"
-          />
+            :rules="[(val) => (!!val && val.length >= 6) || 'Minimo 6 caratteri']"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="hidden_password ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="hidden_password = !hidden_password"
+              />
+            </template>
+          </q-input>
 
           <q-input
             filled
             v-model="form.password_confirmation"
-            type="password"
+            :type="hidden_confirmed ? 'password' : 'text'"
             label="Conferma Password"
             :rules="[(val) => val === form.password || 'Le password non corrispondono']"
-          />
+            ><template v-slot:append>
+              <q-icon
+                :name="hidden_confirmed ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="hidden_confirmed = !hidden_confirmed"
+              /> </template
+          ></q-input>
 
           <q-btn
             label="Registrati"
@@ -45,9 +59,11 @@
             class="full-width q-mt-md"
             :loading="loading"
           />
-        </q-form> </q-card-section
-      ><q-btn class="q-pa-md" label="Home" to="/"> </q-btn>
-      <q-btn class="q-pa-md" label="Login" to="/login"> </q-btn>
+        </q-form>
+      </q-card-section>
+      <q-card-section class="flex" style="gap: 20px">
+        <q-btn class="q-pa-md" label="Login" to="/login"> </q-btn>
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
@@ -57,12 +73,12 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { useSessionStore } from 'src/stores/sessionStore'
 
 const $q = useQuasar()
 const router = useRouter()
-const sessionStore = useSessionStore()
 const loading = ref(false)
+const hidden_password = ref(true)
+const hidden_confirmed = ref(true)
 const form = ref({
   name: '',
   email: '',
@@ -70,8 +86,9 @@ const form = ref({
   password_confirmation: '',
 })
 
-function setSession(newToken: string, newUser: string) {
-  sessionStore.setSession(newToken, newUser)
+function setSession(newToken: string, newUser: string, newUsername: string) {
+  const session = { user: newUser, token: newToken, username: newUsername }
+  localStorage.setItem('session', JSON.stringify(session))
 }
 
 const registerUser = async () => {
@@ -81,7 +98,7 @@ const registerUser = async () => {
     const response = await axios.post('http://localhost:8000/api/register', form.value)
     $q.notify({ message: response.data.message, color: 'green', icon: 'check', position: 'top' })
     form.value = { name: '', email: '', password: '', password_confirmation: '' }
-    setSession(response.data.token, response.data.email)
+    setSession(response.data.token, response.data.email, response.data.username)
     await router.push('/')
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {

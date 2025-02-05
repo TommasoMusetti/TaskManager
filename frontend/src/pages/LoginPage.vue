@@ -18,10 +18,18 @@
           <q-input
             filled
             v-model="form.password"
-            type="password"
+            :type="isPwd ? 'password' : 'text'"
             label="Password"
             :rules="[(val) => !!val || 'Campo Obbligatorio']"
-          />
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+          </q-input>
 
           <q-btn
             label="Login"
@@ -33,7 +41,6 @@
         </q-form>
       </q-card-section>
       <q-card-section class="flex" style="gap: 20px">
-        <q-btn class="q-pa-md" label="Home" to="/"> </q-btn>
         <q-btn class="q-pa-md" label="Registrazione" to="/register"> </q-btn>
       </q-card-section>
     </q-card>
@@ -45,7 +52,6 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { useSessionStore } from 'src/stores/sessionStore'
 
 const $q = useQuasar()
 const router = useRouter()
@@ -55,13 +61,13 @@ const form = ref({
   password: '',
 })
 
-const sessionStore = useSessionStore()
-
-function setSession(newToken: string, newUser: string) {
-  sessionStore.setSession(newToken, newUser)
+function setSession(newToken: string, newUser: string, newUsername: string) {
+  const session = { user: newUser, token: newToken, username: newUsername }
+  localStorage.setItem('session', JSON.stringify(session))
 }
 
 const loading = ref(false)
+const isPwd = ref(true)
 
 const loginUser = async () => {
   loading.value = true
@@ -75,7 +81,7 @@ const loginUser = async () => {
         icon: 'check',
         position: 'top',
       })
-      setSession(response.data.token, response.data.email)
+      setSession(response.data.token, response.data.email, response.data.username)
       await router.push('/')
     } else {
       $q.notify({ message: 'Credenziali errate!' })
