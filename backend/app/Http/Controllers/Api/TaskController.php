@@ -67,7 +67,7 @@ class TaskController extends Controller
 
         $message = count($request->ids) > 1
             ? 'Tasks eliminate con successo!'
-            : 'Task eliminata cocon successo!';
+            : 'Task eliminata con successo!';
 
         return response()->json(['message' => $message], 200);
     }

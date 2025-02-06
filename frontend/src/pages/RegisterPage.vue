@@ -102,14 +102,11 @@ const registerUser = async () => {
     await router.push('/tasks')
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      // Verifica se l'errore è un'istanza di AxiosError
       if (error.response && error.response.status === 422) {
         $q.notify({ message: 'Email già in uso' })
       } else {
         $q.notify({ message: 'Errore nella registrazione' })
       }
-    } else {
-      $q.notify({ message: 'Errore sconosciuto' })
     }
   }
   loading.value = false
